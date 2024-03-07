@@ -2,7 +2,6 @@ import { useState } from "react";
 
 import { useRouter } from "next/navigation";
 
-import { publicEnv } from "@/lib/env/public";
 import type { SelectBook } from "@/lib/types/db";
 
 export default function useChat() {
@@ -16,29 +15,33 @@ export default function useChat() {
 
     try {
       // Fetch book data from the API
-      const searchResponse = await fetch(
-        `${publicEnv.NEXT_PUBLIC_MODEL_BASE_URL}/indexes/picbook/docs?api-version=2020-06-30&search=${answer}`,
-        {
-          method: "GET",
-          headers: {
-            "api-key": publicEnv.NEXT_PUBLIC_MODEL_API_KEY,
-          },
-        },
-      );
-      if (!searchResponse.ok) {
-        throw new Error(`API responded with status: ${searchResponse.status}`);
-      }
-      const searchData = await searchResponse.json();
+      // const searchResponse = await fetch(
+      //   `${publicEnv.NEXT_PUBLIC_MODEL_BASE_URL}/indexes/picbook/docs?api-version=2020-06-30&search=${answer}`,
+      //   {
+      //     method: "GET",
+      //     headers: {
+      //       "api-key": publicEnv.NEXT_PUBLIC_MODEL_API_KEY,
+      //     },
+      //   },
+      // );
+      // if (!searchResponse.ok) {
+      //   throw new Error(`API responded with status: ${searchResponse.status}`);
+      // }
+      // const searchData = await searchResponse.json();
 
       // Fetch detailed book information
-      const bookResponse = await fetch(`/api/book/${searchData.value[0].id}`);
-      if (!bookResponse.ok) {
-        throw new Error(
-          `Book details API responded with status: ${bookResponse.status}`,
-        );
-      }
+      // const bookResponse = await fetch(`/api/book/${searchData.value[0].id}`);
+      // if (!bookResponse.ok) {
+      //   throw new Error(
+      //     `Book details API responded with status: ${bookResponse.status}`,
+      //   );
+      // }
+      console.log(answer);
+      const res = await fetch(
+        `/api/question/${(new Date().getSeconds() % 30) + 1}`,
+      );
 
-      const bookData: SelectBook = await bookResponse.json();
+      const bookData: SelectBook = await res.json();
       return bookData;
     } catch (error) {
       console.error(error);
